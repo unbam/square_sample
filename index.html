@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Square Register API Web example</title>
+  <style type="text/css">
+    body {
+      background-color: #DDD;
+      margin: 10px;
+      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    }
+
+    h1,
+    a {
+    
+      margin-left: 25%
+    }
+
+    button {
+      display: none;
+      width: 100%;
+      -webkit-border-radius: 28;
+      -moz-border-radius: 28;
+      border-radius: 28px;
+      color: #ffffff;
+      font-size: 70px;
+      background: #3498db;
+      padding: 10px 20px 10px 20px;
+      text-decoration: none;
+    }
+
+    input {
+      border: 1px solid #BEBEBE;
+      padding: 7px;
+      margin: 0px;
+      outline: none;
+      width: 50%;
+    }
+
+    label {
+      margin: 0 0 3px 0;
+      padding: 0px;
+      display: block;
+      font-weight: bold;
+      text-align: left;
+      margin-left: 25%
+    }
+
+    span {
+      font-size: 20px
+    }
+
+    #form {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <h1> Best Example Store</h1>
+  <br>
+  <a id="chargeButton"></a>
+  <div id="form">
+    <!-- This isn't a real e-commerece form, but it could be! -->
+    <!-- Learn more about accepting payments online here: https://docs.connect.squareup.com/articles/adding-payment-form/ -->
+    <label>Card Number</label>
+    <input type="text" placeholder="This is a fake form!">
+    <label>CVV</label>
+    <input type="text" name="">
+    <label>Expiration Date</label>
+    <input type="text" name="">
+    <label>Postal Code</label>
+    <input type="text" name="">
+  </div>
+  <script>
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    var callbackUrl = 'https://locahost'
+    var clientId = 'CLIENT_ID'
+    var iOSparameters = {
+      "amount_money": {
+        "amount": 100,
+        "currency_code": "JPY"
+      },
+      "callback_url": callbackUrl,
+      "client_id": clientId,
+      "version": "1.1",
+      "notes": "totall optional note",
+      "options": {
+        "supported_tender_types": ["CREDIT_CARD", "CASH"]
+      }
+    }
+
+    var androidIntent = "intent:#Intent;action=com.squareup.register.action.CHARGE;package=com.squareup;S.browser_fallback_url=https://my.website.com/index.html;S.com.squareup.register.WEB_CALLBACK_URI=" + callbackUrl + ";S.com.squareup.register.CLIENT_ID=" + clientId + ";S.com.squareup.register.API_VERSION=v1.3;i.com.squareup.register.TOTAL_AMOUNT=100;S.com.squareup.register.CURRENCY_CODE=USD;S.com.squareup.register.TENDER_TYPES=com.squareup.register.TENDER_CARD,com.squareup.register.TENDER_CASH;end"
+    if (/windows phone/i.test(userAgent)) {
+        //There isn't a Square Register app for Windows Phone, so do nothing and leave the form.
+      }
+      if (/android/i.test(userAgent)) {
+        //For Android, we'd want to hide form, and display the proper link to the Register app. 
+        console.log("Looks like you are on an android device!")
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('chargeButton').style.display = 'inline-block';
+        document.getElementById('chargeButton').innerHTML = "Charge with Square Register (Android)";
+        document.getElementById('chargeButton').href = androidIntent;
+      }
+      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        //For Android, we'd want to hide form, and display the proper link to the Register app. 
+        console.log("Looks like you are on an iOS device!")
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('chargeButton').style.display = 'inline-block';
+        document.getElementById('chargeButton').innerHTML = "Charge with Square Register (iOS)";
+        document.getElementById('chargeButton').href = 'square-commerce-v1://payment/create?data=' + encodeURIComponent(JSON.stringify(iOSparameters))
+      }
+    </script>
+  </body>
+  </html>
